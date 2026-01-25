@@ -3,7 +3,6 @@ import {
   SafeAreaProvider,
   SafeAreaView,
 } from 'react-native-safe-area-context';
-import { Main } from './src/screens/main';
 import RootNavigator from './src/navigations/RootNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 
