@@ -10,6 +10,8 @@ import {
   Platform,
 } from 'react-native';
 import { AppLayout } from '../layouts/AppLayout';
+import { Colors } from '../common/Typography';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export const Home = ({ navigation }: any) => {
   const [tripType, setTripType] = useState<'round' | 'oneway'>('round');
@@ -17,10 +19,10 @@ export const Home = ({ navigation }: any) => {
   const [to, setTo] = useState('Indore, Madhya Pradesh');
 
   const services = [
-    { icon: '✈️', label: 'Flights', color: '#3B82F6' },
-    { icon: '🚂', label: 'Trains', color: '#8B5CF6' },
-    { icon: '🚗', label: 'Cabs', color: '#10B981' },
-    { icon: '🏨', label: 'Hotels', color: '#F59E0B' },
+    { icon: '✈️', label: 'Flights', color: Colors.white },
+    { icon: '🚂', label: 'Trains', color: Colors.white },
+    { icon: '🚗', label: 'Cabs', color: Colors.white },
+    { icon: '🏨', label: 'Hotels', color: Colors.white },
   ];
 
   const quickActions = [
@@ -32,42 +34,37 @@ export const Home = ({ navigation }: any) => {
 
   return (
     <AppLayout >
-      <StatusBar barStyle="light-content" backgroundColor="#2563EB" />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
 
       {/* Header */}
       <View style={styles.header}>
-        {/* Decorative circles */}
-        <View style={styles.decorativeCircle1} />
-        <View style={styles.decorativeCircle2} />
-
-        {/* Top Bar */}
-        <View style={styles.topBar}>
-          <View style={styles.userInfo}>
-            <View style={styles.avatar}>
-              <Text style={styles.avatarText}>NS</Text>
+        <View style={styles.subheader}>
+          {/* Top Bar */}
+          <View style={styles.topBar}>
+            <View style={styles.userInfo}>
+              <View style={styles.avatar}>
+                <Text style={styles.avatarText}>NS</Text>
+                <View style={styles.menuBadge}><Ionicons name="menu" size={12} color={Colors.primary} /></View>
+              </View>
+              <View style={styles.welcomeTextContainer}>
+                <Text style={styles.welcomeSubtext}>Welcome Neeraj Saini</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+                  <Ionicons name="location" size={14} color={Colors.white} />
+                  <Text style={styles.welcomeName}>Bhopal</Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.welcomeTextContainer}>
-              <Text style={styles.welcomeSubtext}>Welcome back</Text>
-              <Text style={styles.welcomeName}>Neeraj Saini</Text>
+            <View style={styles.headerIcons}>
+              <TouchableOpacity style={styles.headerIconButton}>
+                <Ionicons name='shoping' size={18} color={Colors.white} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.headerIconButton}>
+                <Ionicons name="notifications" size={18} color={Colors.white} />
+                <View style={styles.notificationBadge} />
+              </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.headerIcons}>
-            <TouchableOpacity style={styles.headerIconButton}>
-              <Text style={styles.headerIcon}>🛒</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.headerIconButton}>
-              <Text style={styles.headerIcon}>🔔</Text>
-              <View style={styles.notificationBadge} />
-            </TouchableOpacity>
-          </View>
         </View>
-
-        {/* Location */}
-        <View style={styles.locationContainer}>
-          <Text style={styles.locationIcon}>📍</Text>
-          <Text style={styles.locationText}>Bhopal, India</Text>
-        </View>
-
         {/* Main Services */}
         <View style={styles.servicesGrid}>
           {services.map((service, index) => (
@@ -83,8 +80,21 @@ export const Home = ({ navigation }: any) => {
             </TouchableOpacity>
           ))}
         </View>
+        <View style={styles.servicesGrid}>
+          {quickActions.map((service, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.serviceCard}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.serviceIconContainer, { backgroundColor: service.subtitle }]}>
+                <Text style={styles.serviceIcon}>{service.icon}</Text>
+              </View>
+              <Text style={styles.serviceLabel}>{service.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
-
       {/* Scrollable Content */}
       <ScrollView
         style={styles.scrollView}
@@ -258,30 +268,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   header: {
-    backgroundColor: '#2563EB',
-    paddingTop: Platform.OS === 'ios' ? 60 : 48,
+    backgroundColor: Colors.white,
+    height: 400,
     paddingBottom: 24,
-    paddingHorizontal: 20,
+    width: '100%',
     position: 'relative',
     overflow: 'hidden',
   },
-  decorativeCircle1: {
-    position: 'absolute',
-    top: -100,
-    right: -100,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-  },
-  decorativeCircle2: {
-    position: 'absolute',
-    bottom: -60,
-    left: -60,
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+  subheader: {
+    backgroundColor: Colors.primary,
+    height: 165,
+    paddingTop: Platform.OS === 'ios' ? 60 : 45,
+    // paddingBottom: 24,
+    paddingHorizontal: 20,
+    position: 'relative',
+    overflow: 'hidden',
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
   },
   topBar: {
     flexDirection: 'row',
@@ -298,19 +301,20 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 4,
+    position: 'relative',
   },
   avatarText: {
-    color: '#2563EB',
+    color: Colors.white,
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  menuBadge: {
+    position: 'absolute', bottom: 0, right: -5, backgroundColor: '#FFF',
+    borderRadius: 10, padding: 2
   },
   welcomeTextContainer: {
     marginLeft: 12,
@@ -332,8 +336,6 @@ const styles = StyleSheet.create({
   headerIconButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -354,7 +356,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    zIndex: 1,
+    // zIndex: 1,
   },
   locationIcon: {
     fontSize: 12,

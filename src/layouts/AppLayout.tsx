@@ -12,7 +12,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
         <View style={styles.container}>
             {children}
             {/* Bottom Navigation */}
-            <View style={styles.bottomNav}>
+            {/* <View style={styles.bottomNav}>
                 <TouchableOpacity
                     style={styles.navItem}
                     onPress={() => navigation.navigate('Home' as never)}
@@ -59,7 +59,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
                     <Text style={styles.navIcon}>👤</Text>
                     <Text style={styles.navTextActive}>Profile</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
         </View>
     );
 };

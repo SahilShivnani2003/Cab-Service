@@ -22,7 +22,7 @@ export const Main = ({ navigation }: any) => {
 
     // Navigate after delay
    const timer = setTimeout(() => {
-      navigation.replace('Home'); // or whatever your next screen is called
+      navigation.replace('Tabs'); // or whatever your next screen is called
     }, 3000); // 3 second delay
 
     // Cleanup
