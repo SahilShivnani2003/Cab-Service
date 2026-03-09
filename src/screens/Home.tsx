@@ -19,10 +19,10 @@ export const Home = ({ navigation }: any) => {
   const [to, setTo] = useState('Indore, Madhya Pradesh');
 
   const services = [
-    { icon: '✈️', label: 'Flights', color: Colors.white },
-    { icon: '🚂', label: 'Trains', color: Colors.white },
-    { icon: '🚗', label: 'Cabs', color: Colors.white },
-    { icon: '🏨', label: 'Hotels', color: Colors.white },
+    { icon: '✈️', label: 'Flights' },
+    { icon: '🚂', label: 'Trains' },
+    { icon: '🚗', label: 'Cabs' },
+    { icon: '🏨', label: 'Hotels' },
   ];
 
   const quickActions = [
@@ -36,71 +36,80 @@ export const Home = ({ navigation }: any) => {
     <AppLayout >
       <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.subheader}>
-          {/* Top Bar */}
-          <View style={styles.topBar}>
-            <View style={styles.userInfo}>
-              <View style={styles.avatar}>
-                <Text style={styles.avatarText}>NS</Text>
-                <View style={styles.menuBadge}><Ionicons name="menu" size={12} color={Colors.primary} /></View>
-              </View>
-              <View style={styles.welcomeTextContainer}>
-                <Text style={styles.welcomeSubtext}>Welcome Neeraj Saini</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
-                  <Ionicons name="location" size={14} color={Colors.white} />
-                  <Text style={styles.welcomeName}>Bhopal</Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.headerIcons}>
-              <TouchableOpacity style={styles.headerIconButton}>
-                <Ionicons name='shoping' size={18} color={Colors.white} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.headerIconButton}>
-                <Ionicons name="notifications" size={18} color={Colors.white} />
-                <View style={styles.notificationBadge} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        {/* Main Services */}
-        <View style={styles.servicesGrid}>
-          {services.map((service, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.serviceCard}
-              activeOpacity={0.7}
-            >
-              <View style={[styles.serviceIconContainer, { backgroundColor: service.color }]}>
-                <Text style={styles.serviceIcon}>{service.icon}</Text>
-              </View>
-              <Text style={styles.serviceLabel}>{service.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View style={styles.servicesGrid}>
-          {quickActions.map((service, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.serviceCard}
-              activeOpacity={0.7}
-            >
-              <View style={[styles.serviceIconContainer, { backgroundColor: service.subtitle }]}>
-                <Text style={styles.serviceIcon}>{service.icon}</Text>
-              </View>
-              <Text style={styles.serviceLabel}>{service.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
       {/* Scrollable Content */}
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.subheader}>
+            {/* Top Bar */}
+            <View style={styles.topBar}>
+              <View style={styles.userInfo}>
+                <View style={styles.avatar}>
+                  <Text style={styles.avatarText}>NS</Text>
+                  <TouchableOpacity style={styles.menuBadge} ><Ionicons name="menu" size={12} color={Colors.primary} /></TouchableOpacity>
+                </View>
+                <View style={styles.welcomeTextContainer}>
+                  <Text style={styles.welcomeSubtext}>Welcome Neeraj Saini</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 3 }}>
+                    <Ionicons name="location" size={15} color={Colors.white} />
+                    <Text style={styles.welcomeName}>Bhopal</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.headerIcons}>
+                <TouchableOpacity style={styles.headerIconButton}>
+                  <Ionicons name='shoping' size={18} color={Colors.white} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.headerIconButton}>
+                  <Ionicons name="notifications" size={18} color={Colors.white} />
+                  <View style={styles.notificationBadge} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          {/* Main Services */}
+          <View style={styles.servicesGrid}>
+            {services.map((service, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.serviceCard}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.serviceIconContainer]}>
+                  <Text style={styles.serviceIcon}>{service.icon}</Text>
+                </View>
+                <Text style={styles.serviceLabel}>{service.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          {/* {sub-service} */}
+          <View style={styles.subService}>
+            {quickActions.map((service, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.subServiceCard}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.subServiceIconContainer]}>
+                  <Text style={styles.serviceIcon}>{service.icon}</Text>
+                </View>
+                <Text style={styles.serviceLabel}>{service.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          {/* {Search} */}
+          <View style={styles.searchContainer}>
+            <View style={styles.searchfield}>
+              <Ionicons name="search" size={18} color={Colors.gray} style={{ marginRight: 8, marginLeft:4 }} />
+              <TextInput placeholder='Search for hotels, flights, trains...' style={{ color: Colors.black, flex: 1}} placeholderTextColor={Colors.gray}>
+              </TextInput>
+            </View>
+          </View>
+        </View>
+
         {/* Search Card */}
         <View style={styles.searchCard}>
           {/* Trip Type Toggle */}
@@ -210,7 +219,7 @@ export const Home = ({ navigation }: any) => {
         </View>
 
         {/* Quick Actions */}
-        <View style={styles.sectionContainer}>
+        {/* <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.quickActionsGrid}>
             {quickActions.map((action, index) => (
@@ -230,10 +239,10 @@ export const Home = ({ navigation }: any) => {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </View> */}
 
         {/* Offers Section */}
-        <View style={styles.sectionContainer}>
+        {/* <View style={styles.sectionContainer}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Special Offers</Text>
             <TouchableOpacity>
@@ -253,7 +262,7 @@ export const Home = ({ navigation }: any) => {
               <Text style={styles.offerEmoji}>🎉</Text>
             </View>
           </View>
-        </View>
+        </View> */}
 
         {/* Extra padding for bottom nav */}
         <View style={{ height: 100 }} />
@@ -269,22 +278,44 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: Colors.white,
-    height: 400,
-    paddingBottom: 24,
+    height: 345,
+    paddingBottom: 20,
     width: '100%',
     position: 'relative',
     overflow: 'hidden',
+    marginBottom: 30,
+    shadowColor: Colors.black,
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
   },
   subheader: {
     backgroundColor: Colors.primary,
-    height: 165,
-    paddingTop: Platform.OS === 'ios' ? 60 : 45,
+    height: 160,
+    paddingTop: Platform.OS === 'ios' ? 60 : 20,
     // paddingBottom: 24,
     paddingHorizontal: 20,
     position: 'relative',
-    overflow: 'hidden',
+    // overflow: 'hidden',
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
+    zIndex: 1,
+  },
+  searchContainer: {
+    marginTop: 15,
+    paddingHorizontal: 20,
+  },
+  searchfield: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    padding: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 40
   },
   topBar: {
     flexDirection: 'row',
@@ -325,8 +356,8 @@ const styles = StyleSheet.create({
   },
   welcomeName: {
     color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '500',
     marginTop: 2,
   },
   headerIcons: {
@@ -369,16 +400,21 @@ const styles = StyleSheet.create({
   servicesGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    zIndex: 1,
+    zIndex: 10,
+    marginTop: -50,
+    paddingHorizontal: 8,
   },
   serviceCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    borderRadius: 16,
-    padding: 12,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    padding: 11,
     alignItems: 'center',
-    width: '23%',
+    width: '22%',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
+    borderColor: Colors.white,
+    shadowColor: Colors.black,
+    shadowOpacity: 0.5,
+    elevation: 4,
   },
   serviceIconContainer: {
     width: 48,
@@ -387,20 +423,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
   },
   serviceIcon: {
-    fontSize: 24,
+    fontSize: 25,
   },
   serviceLabel: {
-    color: '#FFFFFF',
+    color: Colors.black,
     fontSize: 10,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  subService: {
+    flexDirection: 'row',
+    paddingHorizontal: 8,
+  },
+  subServiceCard: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'space-between',
+    padding: 6,
+    alignItems: 'center',
+    width: '22%',
+  },
+  subServiceIconContainer: {
+    width: 38,
+    height: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
   },
   scrollView: {
     flex: 1,
@@ -412,7 +462,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 24,
     marginHorizontal: 20,
-    marginTop: -40,
+    marginTop: -15,
     padding: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },

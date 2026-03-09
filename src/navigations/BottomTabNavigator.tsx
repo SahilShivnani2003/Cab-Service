@@ -26,11 +26,11 @@ export const BottomTabNavigator = () => {
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline';
+            iconName = focused ? 'person-circle' : 'person-circle-outline';
           } else if (route.name === 'Driver') {
             iconName = focused ? 'car' : 'car-outline';
           } else if (route.name === 'MyTrip') {
-            iconName = focused ? 'ticket' : 'ticket-outline';
+            iconName = focused ? 'briefcase' : 'briefcase-outline';
           } else if (route.name === 'Offer') {
             iconName = focused ? 'rupee' : 'rupee-outline';
           };

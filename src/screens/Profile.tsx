@@ -9,6 +9,7 @@ import {
   Platform,
   Switch,
 } from 'react-native';
+import { Colors } from '../common/Typography';
 import { AppLayout } from '../layouts/AppLayout';
 
 export const Profile = ({ navigation }: any) => {
@@ -99,7 +100,7 @@ export const Profile = ({ navigation }: any) => {
 
   return (
     <AppLayout>
-      <StatusBar barStyle="light-content" backgroundColor="#2563EB" />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
 
       {/* Header */}
       <View style={styles.header}>

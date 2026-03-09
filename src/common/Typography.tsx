@@ -8,6 +8,7 @@ export const Colors = {
   textSecondary: '#666',
   black: '#000',
   white: '#fff',
+  gray: '#888',
 };
 
 export const Fonts = {
