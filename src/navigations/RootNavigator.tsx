@@ -1,20 +1,21 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Home } from '../screens/Home';
-import { Profile } from '../screens/Profile';
-import { Driver } from '../screens/Driver';
-import { MyTrips } from '../screens/MyTrips';
-import { Main } from '../screens/Main';
+import { SplashScreen } from '../screens/splash-screen';
+import { TabNavigation } from './TabNavigation';
+import { NavigationContainer } from '@react-navigation/native';
 
-const Stack = createNativeStackNavigator();
+export type RootParamList = {
+    splash: undefined;
+    main: undefined;
+};
+const Stack = createNativeStackNavigator<RootParamList>();
 
 export default function RootNavigator() {
-  return (
-    <Stack.Navigator initialRouteName='Main' screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Main" component={Main} />
-      <Stack.Screen name="Home" component={Home}/>
-      <Stack.Screen name="Profile" component={Profile}/>
-      <Stack.Screen name="Driver" component={Driver}/>
-      <Stack.Screen name="MyTrip" component={MyTrips}/>
-    </Stack.Navigator>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="splash" screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="splash" component={SplashScreen} />
+                <Stack.Screen name="main" component={TabNavigation} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }

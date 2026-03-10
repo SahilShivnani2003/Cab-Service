@@ -1,3 +1,4 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useRef } from 'react';
 import {
   View,
@@ -6,8 +7,10 @@ import {
   StyleSheet,
   Animated,
 } from 'react-native';
+import { RootParamList } from '../navigations/RootNavigator';
 
-export const Main = ({ navigation }: any) => {
+type splashScreenProps = NativeStackScreenProps<RootParamList, 'splash'>
+export const SplashScreen = ({ navigation }:  splashScreenProps) => {
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -22,7 +25,7 @@ export const Main = ({ navigation }: any) => {
 
     // Navigate after delay
    const timer = setTimeout(() => {
-      navigation.replace('Home'); // or whatever your next screen is called
+      navigation.replace('main') // or whatever your next screen is called
     }, 3000); // 3 second delay
 
     // Cleanup

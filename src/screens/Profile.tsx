@@ -98,7 +98,7 @@ export const Profile = ({ navigation }: any) => {
   );
 
   return (
-    <AppLayout>
+    <View>
       <StatusBar barStyle="light-content" backgroundColor="#2563EB" />
 
       {/* Header */}
@@ -190,7 +190,7 @@ export const Profile = ({ navigation }: any) => {
         {/* Extra padding for bottom nav */}
         <View style={{ height: 100 }} />
       </ScrollView>
-    </AppLayout>
+    </View>
   );
 };
 

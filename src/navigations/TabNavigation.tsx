@@ -1,67 +1,66 @@
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home } from '../screens/Home';
-import { MyTrips } from '../screens/MyTrips';
-import { Main } from '../screens/Main';
-import { Driver } from '../screens/Driver';
-import { Profile } from '../screens/Profile';
 import { TabConfig } from '../types/tabConfig';
 import CustomTabBar from '../components/bottomTabs/custom-tabBar';
 
-export type tabParamList = {
-  home: undefined;
-  myTrips: undefined;
-  offers: undefined;
-  driver: undefined;
-  profile: undefined;
+// Placeholder screens
+const EmptyScreen = () => null;
+
+export type TabParamList = {
+    home: undefined;
+    myTrips: undefined;
+    offers: undefined;
+    driver: undefined;
+    profile: undefined;
 };
 
+// ── Ionicons names matching screenshot icons exactly ──────────────────────────
 const mainTabs: TabConfig[] = [
-  {
-    name: 'home',
-    label: 'Home',
-    icon: 'grid',
-    iconOff: 'grid-outline',
-  },
-  {
-    name: 'myTrips',
-    label: 'My Trips',
-    icon: 'grid',
-    iconOff: 'grid-outline',
-  },
-  {
-    name: 'offers',
-    label: 'Offers',
-    icon: 'grid',
-    iconOff: 'grid-outline',
-    center: true,
-  },
-  {
-    name: 'driver',
-    label: 'Driver',
-    icon: 'grid',
-    iconOff: 'grid-outline',
-  },
-  {
-    name: 'profile',
-    label: 'Profile',
-    icon: 'grid',
-    iconOff: 'grid-outline',
-  },
+    {
+        name: 'home',
+        label: 'Home',
+        icon: 'home', // filled house   — active orange
+        iconOff: 'home-outline', // outline house  — inactive grey
+    },
+    {
+        name: 'myTrips',
+        label: 'My trips',
+        icon: 'briefcase',
+        iconOff: 'briefcase-outline',
+    },
+    {
+        name: 'offers',
+        label: 'offers',
+        icon: 'cash', // center ₹ button — icon not rendered directly
+        iconOff: 'cash-outline',
+        center: true,
+    },
+    {
+        name: 'driver',
+        label: 'Driver',
+        icon: 'car',
+        iconOff: 'car-outline',
+    },
+    {
+        name: 'profile',
+        label: 'Profile',
+        icon: 'person-circle',
+        iconOff: 'person-circle-outline',
+    },
 ];
 
-const Tab = createBottomTabNavigator<tabParamList>();
+const Tab = createBottomTabNavigator<TabParamList>();
 
-export const TabNavigation = () => {
-  return (
+export const TabNavigation = () => (
     <Tab.Navigator
-      screenOptions={{ headerShown: false }}
-      tabBar={props => <CustomTabBar {...props} tabs={mainTabs} />}
+        screenOptions={{ headerShown: false }}
+        tabBar={props => <CustomTabBar {...props} tabs={mainTabs} />}
     >
-      <Tab.Screen name="home" component={Home} />
-      <Tab.Screen name="myTrips" component={MyTrips} />
-      <Tab.Screen name="offers" component={Main} />
-      <Tab.Screen name="driver" component={Driver} />
-      <Tab.Screen name="profile" component={Profile} />
+        <Tab.Screen name="home" component={Home} />
+        <Tab.Screen name="myTrips" component={EmptyScreen} />
+        <Tab.Screen name="offers" component={EmptyScreen} />
+        <Tab.Screen name="driver" component={EmptyScreen} />
+        <Tab.Screen name="profile" component={EmptyScreen} />
     </Tab.Navigator>
-  );
-};
+);

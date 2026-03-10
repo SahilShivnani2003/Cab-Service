@@ -81,7 +81,12 @@ export const Driver = ({ navigation }: any) => {
         {
             title: 'Performance',
             items: [
-                { icon: '📈', label: 'Weekly Earnings', route: 'WeeklyEarnings', rightText: '₹12,500' },
+                {
+                    icon: '📈',
+                    label: 'Weekly Earnings',
+                    route: 'WeeklyEarnings',
+                    rightText: '₹12,500',
+                },
                 { icon: '⭐', label: 'Rating Details', route: 'RatingDetails', rightText: '4.9' },
                 { icon: '🎯', label: 'Acceptance Rate', route: 'AcceptanceRate', rightText: '92%' },
                 { icon: '⏱️', label: 'Online Hours', route: 'OnlineHours', rightText: '32h' },
@@ -93,7 +98,12 @@ export const Driver = ({ navigation }: any) => {
                 { icon: '🚗', label: 'Vehicle Documents', route: 'VehicleDocs', badge: 'Verified' },
                 { icon: '📄', label: 'License', route: 'License', badge: 'Valid' },
                 { icon: '🛡️', label: 'Insurance', route: 'Insurance', badge: 'Active' },
-                { icon: '✅', label: 'Background Check', route: 'BackgroundCheck', badge: 'Cleared' },
+                {
+                    icon: '✅',
+                    label: 'Background Check',
+                    route: 'BackgroundCheck',
+                    badge: 'Cleared',
+                },
             ],
         },
         {
@@ -106,7 +116,6 @@ export const Driver = ({ navigation }: any) => {
             ],
         },
     ];
-
 
     const renderTripCard = (trip: any) => (
         <TouchableOpacity key={trip.id} style={styles.tripCard} activeOpacity={0.7}>
@@ -131,12 +140,16 @@ export const Driver = ({ navigation }: any) => {
             <View style={styles.tripRoute}>
                 <View style={styles.routeItem}>
                     <View style={styles.pickupDot} />
-                    <Text style={styles.routeText} numberOfLines={1}>{trip.pickup}</Text>
+                    <Text style={styles.routeText} numberOfLines={1}>
+                        {trip.pickup}
+                    </Text>
                 </View>
                 <View style={styles.routeLine} />
                 <View style={styles.routeItem}>
                     <View style={styles.dropoffDot} />
-                    <Text style={styles.routeText} numberOfLines={1}>{trip.dropoff}</Text>
+                    <Text style={styles.routeText} numberOfLines={1}>
+                        {trip.dropoff}
+                    </Text>
                 </View>
             </View>
 
@@ -150,7 +163,7 @@ export const Driver = ({ navigation }: any) => {
     );
 
     return (
-        <AppLayout>
+        <View>
             <StatusBar barStyle="light-content" backgroundColor="#2563EB" />
 
             {/* Header */}
@@ -170,7 +183,12 @@ export const Driver = ({ navigation }: any) => {
                 <View style={styles.statusCard}>
                     <View style={styles.statusLeft}>
                         <Text style={styles.statusLabel}>You are</Text>
-                        <Text style={[styles.statusText, isOnline ? styles.statusOnline : styles.statusOffline]}>
+                        <Text
+                            style={[
+                                styles.statusText,
+                                isOnline ? styles.statusOnline : styles.statusOffline,
+                            ]}
+                        >
                             {isOnline ? 'Online' : 'Offline'}
                         </Text>
                     </View>
@@ -255,7 +273,9 @@ export const Driver = ({ navigation }: any) => {
                                     <TouchableOpacity
                                         style={styles.menuItem}
                                         activeOpacity={0.7}
-                                        onPress={() => item.route && navigation.navigate(item.route)}
+                                        onPress={() =>
+                                            item.route && navigation.navigate(item.route)
+                                        }
                                     >
                                         <View style={styles.menuItemLeft}>
                                             <View style={styles.menuIconContainer}>
@@ -265,12 +285,26 @@ export const Driver = ({ navigation }: any) => {
                                         </View>
                                         <View style={styles.menuItemRight}>
                                             {item.badge && (
-                                                <View style={[styles.menuBadge, item.badge === 'Verified' || item.badge === 'Valid' || item.badge === 'Active' || item.badge === 'Cleared' ? styles.menuBadgeGreen : {}]}>
-                                                    <Text style={styles.menuBadgeText}>{item.badge}</Text>
+                                                <View
+                                                    style={[
+                                                        styles.menuBadge,
+                                                        item.badge === 'Verified' ||
+                                                        item.badge === 'Valid' ||
+                                                        item.badge === 'Active' ||
+                                                        item.badge === 'Cleared'
+                                                            ? styles.menuBadgeGreen
+                                                            : {},
+                                                    ]}
+                                                >
+                                                    <Text style={styles.menuBadgeText}>
+                                                        {item.badge}
+                                                    </Text>
                                                 </View>
                                             )}
                                             {item.rightText && (
-                                                <Text style={styles.menuRightText}>{item.rightText}</Text>
+                                                <Text style={styles.menuRightText}>
+                                                    {item.rightText}
+                                                </Text>
                                             )}
                                             <Text style={styles.menuChevron}>›</Text>
                                         </View>
@@ -293,7 +327,7 @@ export const Driver = ({ navigation }: any) => {
                 {/* Extra padding for bottom nav */}
                 <View style={{ height: 100 }} />
             </ScrollView>
-        </AppLayout>
+        </View>
     );
 };
 

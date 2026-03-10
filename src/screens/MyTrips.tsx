@@ -253,7 +253,7 @@ export const MyTrips = ({ navigation }: any) => {
   );
 
   return (
-    <AppLayout>
+    <View>
       <StatusBar barStyle="light-content" backgroundColor="#2563EB" />
       
       {/* Header */}
@@ -335,7 +335,7 @@ export const MyTrips = ({ navigation }: any) => {
           )}
         </View>
       </ScrollView>      
-    </AppLayout>
+    </View>
   );
 };
 
