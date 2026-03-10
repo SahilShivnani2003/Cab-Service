@@ -9,8 +9,19 @@ import {
     Platform,
     Switch,
 } from 'react-native';
-import { AppLayout } from '../layouts/AppLayout';
 
+// ─── Theme Constants (matches HomeScreen) ──────────────────────────────────────
+const ORANGE = '#F4651A';
+const WHITE = '#FFFFFF';
+const BGRAY = '#F2F2F2';
+const DARK = '#1A1A1A';
+const MGRAY = '#888888';
+const BORDER = '#E0E0E0';
+const NAV_BG = '#111111';
+const GREEN = '#22C55E';
+const RED = '#EF4444';
+
+// ─── Types ─────────────────────────────────────────────────────────────────────
 type DriverMenuItem = {
     icon: string;
     label: string;
@@ -24,6 +35,7 @@ type DriverMenuSection = {
     items: DriverMenuItem[];
 };
 
+// ─── Driver Screen ─────────────────────────────────────────────────────────────
 export const Driver = ({ navigation }: any) => {
     const [isOnline, setIsOnline] = useState(false);
 
@@ -118,678 +130,488 @@ export const Driver = ({ navigation }: any) => {
     ];
 
     const renderTripCard = (trip: any) => (
-        <TouchableOpacity key={trip.id} style={styles.tripCard} activeOpacity={0.7}>
-            <View style={styles.tripHeader}>
-                <View style={styles.tripHeaderLeft}>
-                    <View style={styles.passengerAvatar}>
-                        <Text style={styles.passengerInitial}>{trip.passenger[0]}</Text>
-                    </View>
-                    <View style={styles.tripHeaderInfo}>
-                        <Text style={styles.passengerName}>{trip.passenger}</Text>
-                        <Text style={styles.tripTime}>{trip.time}</Text>
-                    </View>
+        <TouchableOpacity key={trip.id} style={s.tripCard} activeOpacity={0.75}>
+            {/* Top row: avatar + name + fare */}
+            <View style={s.tripTop}>
+                <View style={s.passengerAvatar}>
+                    <Text style={s.passengerInitial}>{trip.passenger[0]}</Text>
                 </View>
-                <View style={styles.fareContainer}>
-                    <Text style={styles.fareAmount}>{trip.fare}</Text>
-                    <View style={styles.ratingBadge}>
-                        <Text style={styles.ratingText}>⭐ {trip.rating}</Text>
+                <View style={s.tripInfo}>
+                    <Text style={s.passengerName}>{trip.passenger}</Text>
+                    <Text style={s.tripTime}>{trip.time}</Text>
+                </View>
+                <View style={s.fareWrap}>
+                    <Text style={s.fareAmt}>{trip.fare}</Text>
+                    <View style={s.ratingBadge}>
+                        <Text style={s.ratingTxt}>⭐ {trip.rating}</Text>
                     </View>
                 </View>
             </View>
 
-            <View style={styles.tripRoute}>
-                <View style={styles.routeItem}>
-                    <View style={styles.pickupDot} />
-                    <Text style={styles.routeText} numberOfLines={1}>
+            {/* Route */}
+            <View style={s.routeWrap}>
+                <View style={s.routeRow}>
+                    <View style={s.pickupDot} />
+                    <Text style={s.routeTxt} numberOfLines={1}>
                         {trip.pickup}
                     </Text>
                 </View>
-                <View style={styles.routeLine} />
-                <View style={styles.routeItem}>
-                    <View style={styles.dropoffDot} />
-                    <Text style={styles.routeText} numberOfLines={1}>
+                <View style={s.routeLine} />
+                <View style={s.routeRow}>
+                    <View style={s.dropDot} />
+                    <Text style={s.routeTxt} numberOfLines={1}>
                         {trip.dropoff}
                     </Text>
                 </View>
             </View>
 
-            <View style={styles.tripFooter}>
-                <Text style={styles.tripDistance}>📍 {trip.distance}</Text>
-                <TouchableOpacity style={styles.viewDetailsButton}>
-                    <Text style={styles.viewDetailsText}>View Details</Text>
+            {/* Footer */}
+            <View style={s.tripFooter}>
+                <Text style={s.distanceTxt}>📍 {trip.distance}</Text>
+                <TouchableOpacity style={s.detailBtn}>
+                    <Text style={s.detailBtnTxt}>View Details</Text>
                 </TouchableOpacity>
             </View>
         </TouchableOpacity>
     );
 
     return (
-        <View>
-            <StatusBar barStyle="light-content" backgroundColor="#2563EB" />
+        <View style={s.root}>
+            <StatusBar backgroundColor={ORANGE} barStyle="light-content" />
 
-            {/* Header */}
-            <View style={styles.header}>
-                <View style={styles.headerContent}>
-                    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                        <Text style={styles.backIcon}>←</Text>
+            {/* ━━━ ORANGE HEADER ━━━ */}
+            <View style={s.orangeHeader}>
+                {/* Top bar */}
+                <View style={s.topBar}>
+                    <TouchableOpacity style={s.iconBtn} onPress={() => navigation.goBack()}>
+                        <Text style={s.iconBtnTxt}>←</Text>
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Driver Mode</Text>
-                    <TouchableOpacity style={styles.notificationButton}>
-                        <Text style={styles.notificationIcon}>🔔</Text>
-                        <View style={styles.notificationBadge} />
+                    <Text style={s.headerTitle}>Driver Mode</Text>
+                    <TouchableOpacity style={s.iconBtn}>
+                        <Text style={s.hIcon}>🔔</Text>
+                        <View style={s.badgeRed} />
                     </TouchableOpacity>
                 </View>
 
-                {/* Online Status Toggle */}
-                <View style={styles.statusCard}>
-                    <View style={styles.statusLeft}>
-                        <Text style={styles.statusLabel}>You are</Text>
-                        <Text
-                            style={[
-                                styles.statusText,
-                                isOnline ? styles.statusOnline : styles.statusOffline,
-                            ]}
-                        >
+                {/* Online / Offline toggle card */}
+                <View style={s.statusCard}>
+                    <View>
+                        <Text style={s.statusLbl}>You are</Text>
+                        <Text style={[s.statusVal, isOnline ? s.statusOn : s.statusOff]}>
                             {isOnline ? 'Online' : 'Offline'}
                         </Text>
                     </View>
                     <Switch
                         value={isOnline}
                         onValueChange={setIsOnline}
-                        trackColor={{ false: '#D1D5DB', true: '#86EFAC' }}
-                        thumbColor={isOnline ? '#10B981' : '#F3F4F6'}
-                        ios_backgroundColor="#D1D5DB"
-                        style={styles.statusSwitch}
+                        trackColor={{ false: 'rgba(255,255,255,0.3)', true: '#86EFAC' }}
+                        thumbColor={isOnline ? GREEN : WHITE}
+                        ios_backgroundColor="rgba(255,255,255,0.3)"
+                        style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
                     />
                 </View>
             </View>
 
+            {/* ━━━ SCROLL BODY ━━━ */}
             <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
+                style={s.scroll}
+                contentContainerStyle={s.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
                 {/* Today's Stats */}
-                <View style={styles.statsContainer}>
-                    <Text style={styles.sectionTitle}>Today's Summary</Text>
-                    <View style={styles.statsGrid}>
-                        <View style={styles.statCard}>
-                            <Text style={styles.statIcon}>💰</Text>
-                            <Text style={styles.statValue}>{todayStats.earnings}</Text>
-                            <Text style={styles.statLabel}>Earnings</Text>
-                        </View>
-                        <View style={styles.statCard}>
-                            <Text style={styles.statIcon}>🚗</Text>
-                            <Text style={styles.statValue}>{todayStats.trips}</Text>
-                            <Text style={styles.statLabel}>Trips</Text>
-                        </View>
-                        <View style={styles.statCard}>
-                            <Text style={styles.statIcon}>⏰</Text>
-                            <Text style={styles.statValue}>{todayStats.hours}h</Text>
-                            <Text style={styles.statLabel}>Online</Text>
-                        </View>
-                        <View style={styles.statCard}>
-                            <Text style={styles.statIcon}>⭐</Text>
-                            <Text style={styles.statValue}>{todayStats.rating}</Text>
-                            <Text style={styles.statLabel}>Rating</Text>
-                        </View>
+                <View style={s.section}>
+                    <Text style={s.sectionTitle}>Today's Summary</Text>
+                    <View style={s.statsGrid}>
+                        {[
+                            { ico: '💰', val: todayStats.earnings, lbl: 'Earnings' },
+                            { ico: '🚗', val: String(todayStats.trips), lbl: 'Trips' },
+                            { ico: '⏰', val: `${todayStats.hours}h`, lbl: 'Online' },
+                            { ico: '⭐', val: todayStats.rating, lbl: 'Rating' },
+                        ].map((st, i) => (
+                            <View key={i} style={s.statCard}>
+                                <Text style={s.statIco}>{st.ico}</Text>
+                                <Text style={s.statVal}>{st.val}</Text>
+                                <Text style={s.statLbl}>{st.lbl}</Text>
+                            </View>
+                        ))}
                     </View>
                 </View>
 
                 {/* Quick Actions */}
-                <View style={styles.quickActionsContainer}>
-                    <View style={styles.quickActionsGrid}>
-                        {quickActions.map((action, index) => (
+                <View style={s.section}>
+                    <View style={s.quickGrid}>
+                        {quickActions.map((a, i) => (
                             <TouchableOpacity
-                                key={index}
-                                style={styles.quickActionCard}
-                                activeOpacity={0.7}
-                                onPress={() => action.route && navigation.navigate(action.route)}
+                                key={i}
+                                style={s.quickCard}
+                                activeOpacity={0.75}
+                                onPress={() => a.route && navigation.navigate(a.route)}
                             >
-                                <Text style={styles.quickActionIcon}>{action.icon}</Text>
-                                <Text style={styles.quickActionLabel}>{action.label}</Text>
+                                <Text style={s.quickIco}>{a.icon}</Text>
+                                <Text style={s.quickLbl}>{a.label}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
                 </View>
 
                 {/* Recent Trips */}
-                <View style={styles.recentTripsContainer}>
-                    <View style={styles.sectionHeader}>
-                        <Text style={styles.sectionTitle}>Recent Trips</Text>
+                <View style={s.section}>
+                    <View style={s.sectionRow}>
+                        <Text style={s.sectionTitle}>Recent Trips</Text>
                         <TouchableOpacity>
-                            <Text style={styles.viewAllText}>View All</Text>
+                            <Text style={s.viewAll}>View All</Text>
                         </TouchableOpacity>
                     </View>
-                    {recentTrips.map(trip => renderTripCard(trip))}
+                    {recentTrips.map(t => renderTripCard(t))}
                 </View>
 
-                {/* Driver Menu */}
-                {driverMenu.map((section, sectionIndex) => (
-                    <View key={sectionIndex} style={styles.menuSection}>
-                        <Text style={styles.menuSectionTitle}>{section.title}</Text>
-                        <View style={styles.menuCard}>
-                            {section.items.map((item, itemIndex) => (
-                                <View key={itemIndex}>
+                {/* Driver Menu Sections */}
+                {driverMenu.map((sec, si) => (
+                    <View key={si} style={s.section}>
+                        <Text style={s.menuSecTitle}>{sec.title}</Text>
+                        <View style={s.menuCard}>
+                            {sec.items.map((item, ii) => (
+                                <View key={ii}>
                                     <TouchableOpacity
-                                        style={styles.menuItem}
+                                        style={s.menuItem}
                                         activeOpacity={0.7}
                                         onPress={() =>
                                             item.route && navigation.navigate(item.route)
                                         }
                                     >
-                                        <View style={styles.menuItemLeft}>
-                                            <View style={styles.menuIconContainer}>
-                                                <Text style={styles.menuIcon}>{item.icon}</Text>
+                                        <View style={s.menuLeft}>
+                                            <View style={s.menuIconBox}>
+                                                <Text style={s.menuIcon}>{item.icon}</Text>
                                             </View>
-                                            <Text style={styles.menuLabel}>{item.label}</Text>
+                                            <Text style={s.menuLabel}>{item.label}</Text>
                                         </View>
-                                        <View style={styles.menuItemRight}>
+                                        <View style={s.menuRight}>
                                             {item.badge && (
-                                                <View
-                                                    style={[
-                                                        styles.menuBadge,
-                                                        item.badge === 'Verified' ||
-                                                        item.badge === 'Valid' ||
-                                                        item.badge === 'Active' ||
-                                                        item.badge === 'Cleared'
-                                                            ? styles.menuBadgeGreen
-                                                            : {},
-                                                    ]}
-                                                >
-                                                    <Text style={styles.menuBadgeText}>
-                                                        {item.badge}
-                                                    </Text>
+                                                <View style={s.menuBadge}>
+                                                    <Text style={s.menuBadgeTxt}>{item.badge}</Text>
                                                 </View>
                                             )}
                                             {item.rightText && (
-                                                <Text style={styles.menuRightText}>
-                                                    {item.rightText}
-                                                </Text>
+                                                <Text style={s.menuRightTxt}>{item.rightText}</Text>
                                             )}
-                                            <Text style={styles.menuChevron}>›</Text>
+                                            <Text style={s.chevron}>›</Text>
                                         </View>
                                     </TouchableOpacity>
-                                    {itemIndex < section.items.length - 1 && (
-                                        <View style={styles.menuDivider} />
-                                    )}
+                                    {ii < sec.items.length - 1 && <View style={s.menuDivider} />}
                                 </View>
                             ))}
                         </View>
                     </View>
                 ))}
 
-                {/* Emergency Button */}
-                <TouchableOpacity style={styles.emergencyButton} activeOpacity={0.7}>
-                    <Text style={styles.emergencyIcon}>🚨</Text>
-                    <Text style={styles.emergencyText}>Emergency Help</Text>
+                {/* Emergency */}
+                <TouchableOpacity style={s.emergencyBtn} activeOpacity={0.75}>
+                    <Text style={s.emergencyIco}>🚨</Text>
+                    <Text style={s.emergencyTxt}>Emergency Help</Text>
                 </TouchableOpacity>
 
-                {/* Extra padding for bottom nav */}
-                <View style={{ height: 100 }} />
+                <View style={{ height: 20 }} />
             </ScrollView>
+
+            {/* ━━━ BOTTOM NAV ━━━ */}
+            <View style={s.bottomNav}>
+                <TouchableOpacity style={s.navItem}>
+                    <Text style={s.navIco}>🏠</Text>
+                    <Text style={s.navLbl}>Home</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={s.navItem}>
+                    <Text style={s.navIco}>🧳</Text>
+                    <Text style={s.navLbl}>My trips</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={s.navCenter}>
+                    <View style={s.navCircle}>
+                        <Text style={s.navCircleTxt}>₹</Text>
+                    </View>
+                    <Text style={s.navLbl}>offers</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={s.navItem}>
+                    <Text style={[s.navIco, { color: ORANGE }]}>🚘</Text>
+                    <Text style={[s.navLbl, { color: ORANGE }]}>Driver</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={s.navItem}>
+                    <Text style={s.navIco}>👤</Text>
+                    <Text style={s.navLbl}>Profile</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F9FAFB',
-    },
-    header: {
-        backgroundColor: '#2563EB',
-        paddingTop: Platform.OS === 'ios' ? 60 : 48,
+// ─── Styles ────────────────────────────────────────────────────────────────────
+const s = StyleSheet.create({
+    root: { flex: 1, backgroundColor: BGRAY },
+
+    // ━━━ ORANGE HEADER ━━━
+    orangeHeader: {
+        backgroundColor: ORANGE,
+        borderBottomLeftRadius: 28,
+        borderBottomRightRadius: 28,
+        paddingHorizontal: 16,
+        paddingTop: Platform.OS === 'ios' ? 56 : 16,
         paddingBottom: 20,
-        paddingHorizontal: 20,
+        shadowColor: '#000',
+        shadowOpacity: 0.18,
+        shadowOffset: { width: 0, height: 6 },
+        shadowRadius: 10,
+        elevation: 10,
+        zIndex: 10,
     },
-    headerContent: {
+    topBar: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 20,
+        marginBottom: 18,
     },
-    backButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    backIcon: {
-        color: '#FFFFFF',
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    headerTitle: {
-        color: '#FFFFFF',
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    notificationButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    iconBtn: {
+        width: 38,
+        height: 38,
+        borderRadius: 19,
+        backgroundColor: 'rgba(255,255,255,0.25)',
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
     },
-    notificationIcon: {
-        fontSize: 20,
-    },
-    notificationBadge: {
+    iconBtnTxt: { color: WHITE, fontSize: 20, fontWeight: '700' },
+    hIcon: { fontSize: 20 },
+    badgeRed: {
         position: 'absolute',
-        top: 8,
-        right: 8,
+        top: 7,
+        right: 7,
         width: 8,
         height: 8,
         borderRadius: 4,
-        backgroundColor: '#EF4444',
+        backgroundColor: RED,
+        borderWidth: 1.5,
+        borderColor: ORANGE,
     },
+    headerTitle: { color: WHITE, fontSize: 19, fontWeight: '800' },
+
+    // Status card
     statusCard: {
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        backgroundColor: 'rgba(255,255,255,0.18)',
         borderRadius: 16,
         padding: 16,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.25)',
+        borderColor: 'rgba(255,255,255,0.28)',
     },
-    statusLeft: {},
-    statusLabel: {
-        color: 'rgba(255, 255, 255, 0.8)',
-        fontSize: 12,
-        marginBottom: 4,
-    },
-    statusText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    statusOnline: {
-        color: '#10B981',
-    },
-    statusOffline: {
-        color: '#FFFFFF',
-    },
-    statusSwitch: {
-        transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
-    },
-    scrollView: {
-        flex: 1,
-    },
-    scrollContent: {
-        paddingBottom: 24,
-    },
-    statsContainer: {
-        paddingHorizontal: 20,
-        paddingTop: 24,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#1F2937',
-        marginBottom: 16,
-    },
-    statsGrid: {
+    statusLbl: { color: 'rgba(255,255,255,0.8)', fontSize: 12, marginBottom: 4 },
+    statusVal: { fontSize: 24, fontWeight: '800' },
+    statusOn: { color: GREEN },
+    statusOff: { color: WHITE },
+
+    // ━━━ SCROLL ━━━
+    scroll: { flex: 1 },
+    scrollContent: { paddingHorizontal: 14, paddingTop: 20, paddingBottom: 20 },
+
+    // Section
+    section: { marginBottom: 22 },
+    sectionTitle: { fontSize: 17, fontWeight: '700', color: DARK, marginBottom: 14 },
+    sectionRow: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 12,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 14,
     },
+    viewAll: { color: ORANGE, fontSize: 14, fontWeight: '600' },
+
+    // Stats grid
+    statsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
     statCard: {
         flex: 1,
         minWidth: '47%',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 16,
+        backgroundColor: WHITE,
+        borderRadius: 14,
         padding: 16,
         alignItems: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.06,
-        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 6,
         elevation: 3,
     },
-    statIcon: {
-        fontSize: 32,
-        marginBottom: 8,
-    },
-    statValue: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#1F2937',
-        marginBottom: 4,
-    },
-    statLabel: {
-        fontSize: 12,
-        color: '#6B7280',
-    },
-    quickActionsContainer: {
-        paddingHorizontal: 20,
-        marginTop: 24,
-    },
-    quickActionsGrid: {
-        flexDirection: 'row',
-        gap: 12,
-    },
-    quickActionCard: {
+    statIco: { fontSize: 30, marginBottom: 8 },
+    statVal: { fontSize: 22, fontWeight: '800', color: DARK, marginBottom: 4 },
+    statLbl: { fontSize: 12, color: MGRAY },
+
+    // Quick actions
+    quickGrid: { flexDirection: 'row', gap: 10 },
+    quickCard: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
-        borderRadius: 16,
-        padding: 16,
+        backgroundColor: WHITE,
+        borderRadius: 14,
+        padding: 14,
         alignItems: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.06,
-        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 6,
         elevation: 3,
     },
-    quickActionIcon: {
-        fontSize: 28,
-        marginBottom: 8,
-    },
-    quickActionLabel: {
-        fontSize: 11,
-        fontWeight: '600',
-        color: '#1F2937',
-        textAlign: 'center',
-    },
-    recentTripsContainer: {
-        paddingHorizontal: 20,
-        marginTop: 24,
-    },
-    sectionHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 16,
-    },
-    viewAllText: {
-        color: '#2563EB',
-        fontSize: 14,
-        fontWeight: '600',
-    },
+    quickIco: { fontSize: 26, marginBottom: 6 },
+    quickLbl: { fontSize: 11, fontWeight: '600', color: DARK, textAlign: 'center' },
+
+    // Trip card
     tripCard: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 16,
-        padding: 16,
+        backgroundColor: WHITE,
+        borderRadius: 14,
+        padding: 14,
         marginBottom: 12,
         shadowColor: '#000',
+        shadowOpacity: 0.07,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
         shadowRadius: 8,
         elevation: 3,
     },
-    tripHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 16,
-    },
-    tripHeaderLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-    },
+    tripTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
     passengerAvatar: {
         width: 44,
         height: 44,
         borderRadius: 22,
-        backgroundColor: '#3B82F6',
+        backgroundColor: ORANGE,
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 12,
     },
-    passengerInitial: {
-        color: '#FFFFFF',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    tripHeaderInfo: {},
-    passengerName: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#1F2937',
-        marginBottom: 2,
-    },
-    tripTime: {
-        fontSize: 12,
-        color: '#6B7280',
-    },
-    fareContainer: {
-        alignItems: 'flex-end',
-    },
-    fareAmount: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#10B981',
-        marginBottom: 4,
-    },
+    passengerInitial: { color: WHITE, fontSize: 18, fontWeight: '800' },
+    tripInfo: { flex: 1 },
+    passengerName: { fontSize: 15, fontWeight: '700', color: DARK, marginBottom: 2 },
+    tripTime: { fontSize: 12, color: MGRAY },
+    fareWrap: { alignItems: 'flex-end' },
+    fareAmt: { fontSize: 18, fontWeight: '800', color: GREEN, marginBottom: 4 },
     ratingBadge: {
-        backgroundColor: '#FEF3C7',
+        backgroundColor: '#FFF3E0',
         paddingHorizontal: 8,
         paddingVertical: 2,
         borderRadius: 8,
     },
-    ratingText: {
-        fontSize: 11,
-        fontWeight: '600',
-        color: '#92400E',
-    },
-    tripRoute: {
-        marginBottom: 12,
-    },
-    routeItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    pickupDot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: '#10B981',
-        marginRight: 12,
-    },
-    dropoffDot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: '#EF4444',
-        marginRight: 12,
-    },
-    routeLine: {
-        width: 2,
-        height: 16,
-        backgroundColor: '#E5E7EB',
-        marginLeft: 4,
-        marginBottom: 8,
-    },
-    routeText: {
-        flex: 1,
-        fontSize: 14,
-        color: '#4B5563',
-    },
+    ratingTxt: { fontSize: 11, fontWeight: '600', color: '#A0530A' },
+
+    routeWrap: { marginBottom: 12 },
+    routeRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
+    pickupDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: GREEN, marginRight: 10 },
+    dropDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: RED, marginRight: 10 },
+    routeLine: { width: 2, height: 14, backgroundColor: BORDER, marginLeft: 4, marginBottom: 6 },
+    routeTxt: { flex: 1, fontSize: 13, color: '#4B5563' },
+
     tripFooter: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderTopWidth: 1,
-        borderTopColor: '#F3F4F6',
-        paddingTop: 12,
+        borderTopColor: BORDER,
+        paddingTop: 10,
     },
-    tripDistance: {
-        fontSize: 13,
-        color: '#6B7280',
-    },
-    viewDetailsButton: {
-        backgroundColor: '#EFF6FF',
-        paddingHorizontal: 16,
-        paddingVertical: 8,
+    distanceTxt: { fontSize: 13, color: MGRAY },
+    detailBtn: {
+        backgroundColor: '#FEF0E8',
+        paddingHorizontal: 14,
+        paddingVertical: 7,
         borderRadius: 8,
     },
-    viewDetailsText: {
-        color: '#2563EB',
-        fontSize: 13,
-        fontWeight: '600',
-    },
-    menuSection: {
-        paddingHorizontal: 20,
-        marginTop: 24,
-    },
-    menuSectionTitle: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        color: '#6B7280',
-        marginBottom: 12,
+    detailBtnTxt: { color: ORANGE, fontSize: 13, fontWeight: '700' },
+
+    // Menu sections
+    menuSecTitle: {
+        fontSize: 12,
+        fontWeight: '700',
+        color: MGRAY,
         textTransform: 'uppercase',
-        letterSpacing: 0.5,
+        letterSpacing: 0.8,
+        marginBottom: 10,
     },
     menuCard: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 16,
+        backgroundColor: WHITE,
+        borderRadius: 14,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.06,
-        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 6,
         elevation: 3,
     },
     menuItem: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 16,
-        paddingHorizontal: 16,
+        paddingVertical: 14,
+        paddingHorizontal: 14,
     },
-    menuItemLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-    },
-    menuIconContainer: {
-        width: 40,
-        height: 40,
+    menuLeft: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+    menuIconBox: {
+        width: 38,
+        height: 38,
         borderRadius: 10,
-        backgroundColor: '#F3F4F6',
+        backgroundColor: '#FEF0E8',
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 12,
     },
-    menuIcon: {
-        fontSize: 20,
-    },
-    menuLabel: {
-        fontSize: 15,
-        color: '#1F2937',
-        fontWeight: '500',
-        flex: 1,
-    },
-    menuItemRight: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-    },
+    menuIcon: { fontSize: 18 },
+    menuLabel: { fontSize: 15, color: DARK, fontWeight: '500', flex: 1 },
+    menuRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
     menuBadge: {
-        backgroundColor: '#FEE2E2',
+        backgroundColor: '#D1FAE5',
         paddingHorizontal: 8,
-        paddingVertical: 4,
+        paddingVertical: 3,
         borderRadius: 6,
     },
-    menuBadgeGreen: {
-        backgroundColor: '#D1FAE5',
-    },
-    menuBadgeText: {
-        fontSize: 11,
-        fontWeight: '600',
-        color: '#991B1B',
-    },
-    menuRightText: {
-        fontSize: 14,
-        color: '#6B7280',
-        fontWeight: '500',
-    },
-    menuChevron: {
-        fontSize: 28,
-        color: '#D1D5DB',
-    },
-    menuDivider: {
-        height: 1,
-        backgroundColor: '#F3F4F6',
-        marginLeft: 68,
-    },
-    emergencyButton: {
+    menuBadgeTxt: { fontSize: 11, fontWeight: '700', color: '#065F46' },
+    menuRightTxt: { fontSize: 14, color: MGRAY, fontWeight: '600' },
+    chevron: { fontSize: 26, color: BORDER },
+    menuDivider: { height: 1, backgroundColor: BGRAY, marginLeft: 64 },
+
+    // Emergency
+    emergencyBtn: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#FEE2E2',
-        marginHorizontal: 20,
-        marginTop: 24,
-        borderRadius: 16,
+        borderRadius: 14,
         paddingVertical: 16,
-        borderWidth: 2,
+        borderWidth: 1.5,
         borderColor: '#FECACA',
+        marginBottom: 4,
     },
-    emergencyIcon: {
-        fontSize: 20,
-        marginRight: 8,
-    },
-    emergencyText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#DC2626',
-    },
+    emergencyIco: { fontSize: 20, marginRight: 8 },
+    emergencyTxt: { fontSize: 16, fontWeight: '700', color: RED },
+
+    // ━━━ BOTTOM NAV ━━━
     bottomNav: {
         flexDirection: 'row',
-        backgroundColor: '#FFFFFF',
-        borderTopWidth: 1,
-        borderTopColor: '#E5E7EB',
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        paddingBottom: Platform.OS === 'ios' ? 24 : 8,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-        elevation: 8,
+        backgroundColor: NAV_BG,
+        paddingTop: 8,
+        paddingBottom: Platform.OS === 'ios' ? 22 : 10,
+        alignItems: 'flex-end',
     },
-    navItem: {
-        flex: 1,
-        alignItems: 'center',
-        paddingVertical: 8,
-    },
-    navItemCenter: {
-        flex: 1,
-        alignItems: 'center',
-        marginTop: -32,
-    },
-    centerNavButton: {
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        backgroundColor: '#2563EB',
+    navItem: { flex: 1, alignItems: 'center', paddingTop: 4 },
+    navIco: { fontSize: 22, color: MGRAY },
+    navLbl: { fontSize: 10.5, color: MGRAY, marginTop: 3, fontWeight: '500' },
+    navCenter: { flex: 1, alignItems: 'center', marginTop: -24 },
+    navCircle: {
+        width: 58,
+        height: 58,
+        borderRadius: 29,
+        backgroundColor: ORANGE,
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: '#2563EB',
+        borderWidth: 3,
+        borderColor: NAV_BG,
+        shadowColor: ORANGE,
+        shadowOpacity: 0.6,
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 8,
-        marginBottom: 4,
+        shadowRadius: 10,
+        elevation: 10,
     },
-    centerNavIcon: {
-        fontSize: 28,
-    },
-    navIcon: {
-        fontSize: 24,
-        marginBottom: 4,
-    },
-    navText: {
-        fontSize: 10,
-        color: '#9CA3AF',
-    },
-    navTextActive: {
-        fontSize: 10,
-        color: '#2563EB',
-        fontWeight: '600',
-    },
+    navCircleTxt: { fontSize: 26, fontWeight: '900', color: WHITE },
 });

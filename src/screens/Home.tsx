@@ -2,396 +2,569 @@ import React, { useState } from 'react';
 import {
     View,
     Text,
-    TextInput,
-    TouchableOpacity,
-    ScrollView,
     StyleSheet,
+    ScrollView,
+    TouchableOpacity,
+    TextInput,
+    SafeAreaView,
     StatusBar,
     Platform,
+    Dimensions,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const PRIMARY = '#FF6600';
-const SB_H = Platform.OS === 'android' ? StatusBar.currentHeight ?? 24 : 0;
+// ─── Types ─────────────────────────────────────────────────────────────────────
+type TripType = 'round' | 'one';
+type NavId = 'home' | 'trips' | 'offers' | 'driver' | 'profile';
 
-const ROW1 = [
-    { emoji: '✈️', label: 'AirPlane' },
-    { emoji: '🚆', label: 'Railway' },
-    { emoji: '🚃', label: 'Outstation' },
-    { emoji: '🚌', label: 'Hourly\nRentals' },
+interface ServiceItem {
+    id: number;
+    label: string;
+    emoji: string;
+}
+
+// ─── Constants ─────────────────────────────────────────────────────────────────
+const ORANGE = '#F4651A';
+const WHITE = '#FFFFFF';
+const BGRAY = '#F2F2F2';
+const BORDER = '#E0E0E0';
+const DARK = '#1A1A1A';
+const MGRAY = '#888888';
+const LGRAY = '#CCCCCC';
+const BLUE = '#4A90D9';
+const { width: SW } = Dimensions.get('window');
+const CARD_H = 100;
+
+// ─── Data ───────────────────────────────────────────────────────────────────────
+const ROW1: ServiceItem[] = [
+    { id: 1, label: 'AirPlane', emoji: '✈️' },
+    { id: 2, label: 'Railway', emoji: '🚆' },
+    { id: 3, label: 'Outstation', emoji: '🚉' },
+    { id: 4, label: 'Hourly\nRentals', emoji: '🚌' },
 ];
-const ROW2 = [
-    { emoji: '👨‍💻', label: 'Hourly Stay' },
-    { emoji: '🛏️', label: 'Holtels' },
-    { emoji: '🏖️', label: 'Holiday\nPackages' },
-    { emoji: '🚕', label: 'Cabs' },
+
+const ROW2: ServiceItem[] = [
+    { id: 5, label: 'Hourly Stay', emoji: '🛋️' },
+    { id: 6, label: 'Holtels', emoji: '🛏️' },
+    { id: 7, label: 'Holiday Packages', emoji: '🏖️' },
+    { id: 8, label: 'Cabs', emoji: '🚗' },
 ];
 
-export const Home = ({ navigation }: any) => {
-    const [trip, setTrip] = useState<'round' | 'one'>('round');
-    const [from, setFrom] = useState('Bhopal, Madhya Pradesh, India');
-    const [to, setTo] = useState('Indore, Madhya Pradesh, India');
+// ─── Row 1 Card (spans orange header → white bg) ────────────────────────────────
+const Row1Card: React.FC<{ item: ServiceItem }> = ({ item }) => (
+    <View style={s.r1Wrap}>
+        <View style={s.r1Card}>
+            <Text style={s.r1Emoji}>{item.emoji}</Text>
+        </View>
+        <Text style={s.r1Label}>{item.label}</Text>
+    </View>
+);
+
+// ─── Row 2 Icon (flat, no card) ─────────────────────────────────────────────────
+const Row2Icon: React.FC<{ item: ServiceItem }> = ({ item }) => (
+    <View style={s.r2Wrap}>
+        <Text style={s.r2Emoji}>{item.emoji}</Text>
+        <Text style={s.r2Label}>{item.label}</Text>
+    </View>
+);
+
+// ─── HomeScreen ─────────────────────────────────────────────────────────────────
+const HomeScreen: React.FC = () => {
+    const [tripType, setTripType] = useState<TripType>('round');
+    const [fromLoc, setFromLoc] = useState<string>('Bhopal, Madhya Pradesh, India');
+    const [toLoc, setToLoc] = useState<string>('Indore, Madhya Pradesh, India');
+    const [activeNav, setActiveNav] = useState<NavId>('home');
 
     return (
-        <View style={s.root}>
-            <StatusBar barStyle="light-content" backgroundColor={PRIMARY} />
+        <SafeAreaView style={s.root}>
+            <StatusBar backgroundColor={ORANGE} barStyle="light-content" />
 
-            {/* ── ORANGE HEADER (fixed, not scrollable) ── */}
+            {/* ━━━ ORANGE HEADER ━━━ */}
             <View style={s.header}>
-                <View style={s.topBar}>
-                    {/* Avatar */}
+                <View style={s.hLeft}>
                     <View style={s.avatarWrap}>
-                        <View style={s.avatarCircle}>
+                        <View style={s.avatar}>
                             <Text style={s.avatarTxt}>NS</Text>
                         </View>
-                        <View style={s.hamburger}>
-                            <Ionicons name="menu" size={12} color="#fff" />
+                        <View style={s.menuChip}>
+                            <Text style={s.menuChipTxt}>☰</Text>
                         </View>
                     </View>
-                    {/* Name + Location */}
-                    <View style={{ flex: 1, marginLeft: 12 }}>
+                    <View style={{ marginLeft: 10 }}>
                         <Text style={s.welcomeTxt}>Welcome Neeraj Saini</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
-                            <Ionicons name="location-sharp" size={13} color="#fff" />
+                        <View style={s.locRow}>
+                            <Text style={s.locPin}>📍</Text>
                             <Text style={s.locTxt}> Bhopal</Text>
                         </View>
                     </View>
-                    {/* Cart */}
-                    <TouchableOpacity style={s.iconBtn}>
-                        <Ionicons name="cart-outline" size={22} color="#fff" />
-                        <View style={s.cartBadge}>
-                            <Text style={s.cartTxt}>0</Text>
+                </View>
+
+                <View style={s.hRight}>
+                    <TouchableOpacity style={{ marginRight: 16 }}>
+                        <View>
+                            <Text style={s.hIcon}>🪙</Text>
+                            <View style={s.badge0}>
+                                <Text style={s.badge0Txt}>₹0</Text>
+                            </View>
                         </View>
                     </TouchableOpacity>
-                    {/* Bell */}
-                    <TouchableOpacity style={[s.iconBtn, { marginLeft: 10 }]}>
-                        <Ionicons name="notifications-outline" size={22} color="#fff" />
-                        <View style={s.bellDot} />
+                    <TouchableOpacity>
+                        <View>
+                            <Text style={s.hIcon}>🔔</Text>
+                            <View style={s.badgeRed} />
+                        </View>
                     </TouchableOpacity>
                 </View>
             </View>
 
-            {/* ── WHITE SERVICE SECTION overlapping header ── */}
-            {/* position: absolute + top = header height  */}
-            {/* This makes cards sit half on orange, half on white */}
-            <View style={s.serviceSection}>
-                {/* Row 1 */}
-                <View style={s.row1}>
-                    {ROW1.map((item, i) => (
-                        <TouchableOpacity key={i} style={s.r1Item} activeOpacity={0.75}>
-                            <View style={s.r1Card}>
-                                <Text style={s.r1Emoji}>{item.emoji}</Text>
-                            </View>
-                            <Text style={s.r1Label}>{item.label}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-                {/* Row 2 */}
-                <View style={s.row2}>
-                    {ROW2.map((item, i) => (
-                        <TouchableOpacity key={i} style={s.r2Item} activeOpacity={0.75}>
-                            <Text style={s.r2Emoji}>{item.emoji}</Text>
-                            <Text style={s.r2Label}>{item.label}</Text>
-                        </TouchableOpacity>
+            {/* ━━━ ROW 1 CARDS (straddle orange / white boundary) ━━━ */}
+            <View style={s.row1Section}>
+                <View style={s.row1Orange} />
+                <View style={s.row1White} />
+                <View style={s.row1Cards}>
+                    {ROW1.map(item => (
+                        <Row1Card key={item.id} item={item} />
                     ))}
                 </View>
             </View>
 
-            {/* ── SCROLLABLE GREY AREA ── */}
+            {/* ━━━ SCROLLABLE BODY ━━━ */}
             <ScrollView
                 style={s.scroll}
-                contentContainerStyle={s.scrollContent}
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={s.scrollContent}
             >
-                {/* Search bar */}
-                <View style={s.searchBar}>
-                    <Ionicons name="search-outline" size={20} color="#aaa" />
-                    <TextInput style={s.searchInput} placeholderTextColor="#aaa" />
+                <View style={s.middleSection}>
+                    {/* Row 2 services */}
+                    <View style={s.row2Section}>
+                        {ROW2.map(item => (
+                            <Row2Icon key={item.id} item={item} />
+                        ))}
+                    </View>
+
+                    {/* Search bar */}
+                    <View style={s.searchBar}>
+                        <Text style={s.searchIco}>🔍</Text>
+                        <TextInput style={s.searchInput} placeholderTextColor={LGRAY} />
+                    </View>
                 </View>
 
                 {/* Booking card */}
                 <View style={s.card}>
-                    {/* Toggle */}
+                    {/* Round trip / One way toggle */}
                     <View style={s.toggleRow}>
                         <TouchableOpacity
-                            onPress={() => setTrip('round')}
-                            style={[s.toggleBtn, trip === 'round' && s.toggleActive]}
+                            style={[s.toggleBtn, tripType === 'round' ? s.tActive : s.tInactive]}
+                            onPress={() => setTripType('round')}
                         >
-                            <Text style={[s.toggleTxt, trip === 'round' && s.toggleTxtActive]}>
+                            <Text
+                                style={[
+                                    s.toggleTxt,
+                                    tripType === 'round' ? s.tActiveTxt : s.tInactiveTxt,
+                                ]}
+                            >
                                 Round trip
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => setTrip('one')}
-                            style={[s.toggleBtn, trip === 'one' && s.toggleActive]}
+                            style={[s.toggleBtn, tripType === 'one' ? s.tActive : s.tInactive]}
+                            onPress={() => setTripType('one')}
                         >
-                            <Text style={[s.toggleTxt, trip === 'one' && s.toggleTxtActive]}>
+                            <Text
+                                style={[
+                                    s.toggleTxt,
+                                    tripType === 'one' ? s.tActiveTxt : s.tInactiveTxt,
+                                ]}
+                            >
                                 One way
                             </Text>
                         </TouchableOpacity>
                     </View>
 
-                    {/* FROM */}
-                    <View style={s.fieldRow}>
-                        <View style={s.bulletCol}>
-                            <View style={s.bullet} />
-                            <View style={s.vLine} />
+                    {/* Route with connector */}
+                    <View style={s.routeRow}>
+                        {/* Dot-line-dot connector */}
+                        <View style={s.connector}>
+                            <View style={s.dotGray} />
+                            <View style={s.connLine} />
+                            <View style={s.dotDark} />
                         </View>
+
+                        {/* From / To inputs */}
                         <View style={{ flex: 1 }}>
-                            <Text style={s.hint}>From (Area, Street or Landmark)</Text>
-                            <View style={s.inputBox}>
+                            <Text style={s.fieldLbl}>From (Area, Street or Landmark)</Text>
+                            <View style={s.fieldBox}>
                                 <TextInput
-                                    value={from}
-                                    onChangeText={setFrom}
-                                    style={s.inputTxt}
-                                    selectionColor={PRIMARY}
+                                    style={s.fieldTxt}
+                                    value={fromLoc}
+                                    onChangeText={setFromLoc}
+                                />
+                            </View>
+
+                            <Text style={[s.fieldLbl, { marginTop: 14 }]}>
+                                To (Area, Street or Landmark)
+                            </Text>
+                            <View style={s.fieldBox}>
+                                <TextInput
+                                    style={s.fieldTxt}
+                                    value={toLoc}
+                                    onChangeText={setToLoc}
                                 />
                             </View>
                         </View>
                     </View>
 
-                    <View style={{ height: 14 }} />
-
-                    {/* TO */}
-                    <View style={s.fieldRow}>
-                        <View style={s.bulletCol}>
-                            <View style={s.bullet} />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Text style={s.hint}>To (Area, Street or Landmark)</Text>
-                            <View style={s.inputBox}>
-                                <TextInput
-                                    value={to}
-                                    onChangeText={setTo}
-                                    style={s.inputTxt}
-                                    selectionColor={PRIMARY}
-                                />
-                            </View>
-                        </View>
-                    </View>
-
-                    <View style={{ height: 28 }} />
+                    {/* Divider */}
                     <View style={s.divider} />
 
                     {/* Trip Start */}
-                    <View style={{ paddingVertical: 10 }}>
-                        <Text style={s.tripLabel}>TRIP START</Text>
-                        <Text style={s.tripValue}>Mon, 9 Mar 2026 at 6:39 PM</Text>
-                    </View>
-                    <View style={s.divider} />
+                    <Text style={s.tripLbl}>TRIP START</Text>
+                    <Text style={s.tripDate}>Mon, 9 Mar 2026 at 6:39 PM</Text>
 
-                    {/* Search Button */}
-                    <TouchableOpacity style={s.searchBtn}>
-                        <Text style={s.searchBtnTxt}>Search</Text>
+                    {/* CTA */}
+                    <TouchableOpacity style={s.ctaBtn} activeOpacity={0.85}>
+                        <Text style={s.ctaTxt}>Search</Text>
                     </TouchableOpacity>
                 </View>
-
-                <View style={{ height: 100 }} />
             </ScrollView>
-        </View>
+
+            {/* ━━━ BOTTOM NAV ━━━ */}
+            <View style={s.bottomNav}>
+                {/* Home */}
+                <TouchableOpacity style={s.navItem} onPress={() => setActiveNav('home')}>
+                    <Text style={[s.navIco, activeNav === 'home' && s.navIcoOn]}>⌂</Text>
+                    <Text style={[s.navLbl, activeNav === 'home' && s.navLblOn]}>Home</Text>
+                </TouchableOpacity>
+
+                {/* My trips */}
+                <TouchableOpacity style={s.navItem} onPress={() => setActiveNav('trips')}>
+                    <Text style={[s.navIco, activeNav === 'trips' && s.navIcoOn]}>🧳</Text>
+                    <Text style={[s.navLbl, activeNav === 'trips' && s.navLblOn]}>My trips</Text>
+                </TouchableOpacity>
+
+                {/* Offers — floating center button */}
+                <TouchableOpacity style={s.navCenter} onPress={() => setActiveNav('offers')}>
+                    <View style={s.navCircle}>
+                        <Text style={s.navCircleTxt}>₹</Text>
+                    </View>
+                    <Text style={s.navLbl}>offers</Text>
+                </TouchableOpacity>
+
+                {/* Driver */}
+                <TouchableOpacity style={s.navItem} onPress={() => setActiveNav('driver')}>
+                    <Text style={[s.navIco, activeNav === 'driver' && s.navIcoOn]}>🚘</Text>
+                    <Text style={[s.navLbl, activeNav === 'driver' && s.navLblOn]}>Driver</Text>
+                </TouchableOpacity>
+
+                {/* Profile */}
+                <TouchableOpacity style={s.navItem} onPress={() => setActiveNav('profile')}>
+                    <Text style={[s.navIco, activeNav === 'profile' && s.navIcoOn]}>👤</Text>
+                    <Text style={[s.navLbl, activeNav === 'profile' && s.navLblOn]}>Profile</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
     );
 };
 
-// Header height = statusbar + topbar content
-const HEADER_H = SB_H + (Platform.OS === 'ios' ? 50 : 10) + 80;
-// How much of card appears on orange (top half of card)
-const OVERLAP = 55;
+export default HomeScreen;
 
+// ─── Styles ──────────────────────────────────────────────────────────────────────
 const s = StyleSheet.create({
-    root: { flex: 1, backgroundColor: '#F0F0F0' },
+    root: { flex: 1, backgroundColor: BGRAY },
 
-    /* Orange header — exact height, no extra paddingBottom */
+    // ── Header ──
     header: {
-        backgroundColor: PRIMARY,
-        paddingTop: Platform.OS === 'ios' ? 50 : SB_H + 10,
-        paddingHorizontal: 20,
-        paddingBottom: 20,
+        backgroundColor: ORANGE,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
+        paddingTop: 8,
+        paddingBottom: 10,
     },
-    topBar: { flexDirection: 'row', alignItems: 'center' },
-
-    avatarWrap: { width: 54, height: 54, position: 'relative' },
-    avatarCircle: {
-        width: 54,
-        height: 54,
-        borderRadius: 27,
-        borderWidth: 2.5,
-        borderColor: 'rgba(255,255,255,0.85)',
-        backgroundColor: 'rgba(255,255,255,0.15)',
+    hLeft: { flexDirection: 'row', alignItems: 'center' },
+    avatarWrap: { width: 56, height: 56, position: 'relative' },
+    avatar: {
+        width: 56,
+        height: 56,
+        borderRadius: 28,
+        backgroundColor: WHITE,
         alignItems: 'center',
         justifyContent: 'center',
     },
-    avatarTxt: { color: '#fff', fontSize: 18, fontWeight: '700' },
-    hamburger: {
+    avatarTxt: { fontSize: 20, fontWeight: '800', color: ORANGE },
+    menuChip: {
         position: 'absolute',
-        bottom: 0,
-        right: -3,
-        width: 21,
-        height: 21,
-        borderRadius: 11,
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        bottom: -2,
+        right: -4,
+        backgroundColor: '#2C2C2C',
+        borderRadius: 7,
+        width: 22,
+        height: 18,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1.5,
-        borderColor: PRIMARY,
     },
-    welcomeTxt: { color: '#fff', fontSize: 18, fontWeight: '700' },
-    locTxt: { color: 'rgba(255,255,255,0.92)', fontSize: 14 },
-    iconBtn: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: 'rgba(0,0,0,0.28)',
-        alignItems: 'center',
-        justifyContent: 'center',
+    menuChipTxt: { color: WHITE, fontSize: 9, fontWeight: '700' },
+    welcomeTxt: { color: WHITE, fontSize: 16, fontWeight: '700' },
+    locRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
+    locPin: { fontSize: 12 },
+    locTxt: { color: WHITE, fontSize: 13, fontWeight: '500' },
+    hRight: { flexDirection: 'row', alignItems: 'center' },
+    hIcon: { fontSize: 26 },
+    badge0: {
+        position: 'absolute',
+        top: -5,
+        right: -14,
+        backgroundColor: '#FFD700',
+        borderRadius: 6,
+        paddingHorizontal: 3,
+        paddingVertical: 1,
+    },
+    badge0Txt: { fontSize: 8, fontWeight: '800', color: '#333' },
+    badgeRed: {
+        position: 'absolute',
+        top: 1,
+        right: 1,
+        width: 9,
+        height: 9,
+        borderRadius: 5,
+        backgroundColor: '#FF3B30',
+        borderWidth: 1.5,
+        borderColor: ORANGE,
+    },
+
+    // ── Row 1 (overlapping cards) ──
+    row1Section: {
+        height: CARD_H + 40,
         position: 'relative',
     },
-    cartBadge: {
+    row1Orange: {
         position: 'absolute',
-        top: 5,
-        right: 5,
-        width: 15,
-        height: 15,
-        borderRadius: 8,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: CARD_H / 2 + 6,
+        backgroundColor: ORANGE,
+        borderBottomRightRadius: 40,
+        borderBottomLeftRadius: 40,
     },
-    cartTxt: { color: PRIMARY, fontSize: 8, fontWeight: '700' },
-    bellDot: {
+    row1White: {
         position: 'absolute',
-        top: 8,
-        right: 8,
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: '#EF4444',
-        borderWidth: 1.5,
-        borderColor: PRIMARY,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: CARD_H / 2 + 40,
+        backgroundColor: WHITE,
     },
-
-    /* Service section — marginTop: -OVERLAP pulls it over orange */
-    serviceSection: {
-        backgroundColor: '#fff',
-        marginTop: -OVERLAP,
-        zIndex: 10, // stays above orange bg
-        paddingHorizontal: 12,
-        paddingBottom: 16,
+    row1Cards: {
+        position: 'absolute',
+        top: 10,
+        left: 0,
+        right: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingHorizontal: 10,
     },
-
-    row1: { flexDirection: 'row', justifyContent: 'space-between' },
-    r1Item: { flex: 1, alignItems: 'center', marginHorizontal: 4 },
+    r1Wrap: { alignItems: 'center', width: (SW - 40) / 4 },
     r1Card: {
-        width: '100%',
-        aspectRatio: 1,
-        backgroundColor: '#fff',
+        width: 74,
+        height: CARD_H,
+        backgroundColor: WHITE,
         borderRadius: 14,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 8,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.13,
+        shadowOpacity: 0.12,
+        shadowOffset: { width: 0, height: 3 },
         shadowRadius: 6,
-        elevation: 5,
+        elevation: 6,
     },
-    r1Emoji: { fontSize: 36 },
+    r1Emoji: { fontSize: 34 },
     r1Label: {
-        color: '#111',
-        fontSize: 11,
-        fontWeight: '600',
+        marginTop: 7,
+        fontSize: 11.5,
+        color: DARK,
         textAlign: 'center',
-        lineHeight: 15,
-    },
-
-    row2: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 20,
-        paddingHorizontal: 4,
-    },
-    r2Item: { flex: 1, alignItems: 'center', marginHorizontal: 2 },
-    r2Emoji: { fontSize: 40, marginBottom: 6 },
-    r2Label: {
-        color: '#111',
-        fontSize: 11,
         fontWeight: '500',
-        textAlign: 'center',
         lineHeight: 15,
     },
 
-    /* Scroll */
-    scroll: { flex: 1 },
-    scrollContent: { paddingHorizontal: 16, paddingTop: 20 },
+    // ── Row 2 ──
+    row2Section: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingHorizontal: 8,
+        paddingTop: 12,
+        paddingBottom: 16,
+        backgroundColor: WHITE,
+        marginBottom: 10,
+    },
+    middleSection: {
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        paddingHorizontal: 8,
+        paddingTop: 12,
+        paddingBottom: 16,
+        backgroundColor: WHITE,
+        marginBottom: 10,
+    },
+    r2Wrap: { alignItems: 'center', width: (SW - 32) / 4 },
+    r2Emoji: { fontSize: 38 },
+    r2Label: {
+        marginTop: 6,
+        fontSize: 11.5,
+        color: DARK,
+        textAlign: 'center',
+        fontWeight: '500',
+    },
 
+    // ── Search bar ──
     searchBar: {
+        backgroundColor: WHITE,
+        marginHorizontal: 12,
+        marginBottom: 10,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: BORDER,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff',
-        borderRadius: 30,
-        paddingHorizontal: 16,
-        paddingVertical: 14,
-        marginBottom: 16,
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
+        paddingHorizontal: 14,
+        paddingVertical: Platform.OS === 'ios' ? 13 : 4,
     },
-    searchInput: { flex: 1, fontSize: 14, color: '#111', marginLeft: 8, paddingVertical: 0 },
+    searchIco: { fontSize: 17, color: MGRAY, marginRight: 8 },
+    searchInput: { flex: 1, fontSize: 15, color: DARK },
 
+    // ── Booking card ──
     card: {
-        backgroundColor: '#fff',
-        borderRadius: 16,
-        padding: 20,
+        backgroundColor: WHITE,
+        marginHorizontal: 12,
+        borderRadius: 14,
+        padding: 16,
         shadowColor: '#000',
+        shadowOpacity: 0.07,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
         shadowRadius: 8,
         elevation: 4,
+        marginBottom: 16,
     },
 
-    toggleRow: { flexDirection: 'row', gap: 10, marginBottom: 20 },
+    // Toggle
+    toggleRow: { flexDirection: 'row', gap: 8, marginBottom: 18 },
     toggleBtn: {
         flex: 1,
-        paddingVertical: 14,
-        borderRadius: 10,
-        alignItems: 'center',
-        backgroundColor: '#EBEBEB',
-        borderWidth: 1.5,
-        borderColor: 'transparent',
-    },
-    toggleActive: { backgroundColor: '#fff', borderColor: '#3B82F6' },
-    toggleTxt: { fontSize: 14, fontWeight: '500', color: '#888' },
-    toggleTxtActive: { color: '#3B82F6', fontWeight: '600' },
-
-    fieldRow: { flexDirection: 'row' },
-    bulletCol: { width: 20, alignItems: 'center', paddingTop: 18, marginRight: 10 },
-    bullet: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#888' },
-    vLine: { width: 1.5, flex: 1, backgroundColor: '#DDD', marginTop: 4, minHeight: 30 },
-
-    hint: { color: '#999', fontSize: 12, marginBottom: 6 },
-    inputBox: {
-        borderWidth: 1,
-        borderColor: '#CCC',
+        paddingVertical: 11,
         borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: Platform.OS === 'ios' ? 13 : 8,
-    },
-    inputTxt: { fontSize: 14, fontWeight: '600', color: '#111', paddingVertical: 0 },
-
-    divider: { height: 1, backgroundColor: '#E8E8E8', marginVertical: 12 },
-    tripLabel: {
-        fontSize: 11,
-        fontWeight: '600',
-        color: '#999',
-        letterSpacing: 1,
-        marginBottom: 6,
-    },
-    tripValue: { fontSize: 20, fontWeight: '700', color: '#111' },
-
-    searchBtn: {
-        backgroundColor: PRIMARY,
-        borderRadius: 999,
-        paddingVertical: 17,
         alignItems: 'center',
-        marginTop: 6,
     },
-    searchBtnTxt: { color: '#fff', fontSize: 16, fontWeight: '700' },
+    tActive: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: WHITE },
+    tInactive: { backgroundColor: '#EFEFEF' },
+    toggleTxt: { fontSize: 14, fontWeight: '600' },
+    tActiveTxt: { color: BLUE },
+    tInactiveTxt: { color: '#555' },
+
+    // Route connector
+    routeRow: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 4 },
+    connector: {
+        alignItems: 'center',
+        marginRight: 10,
+        marginTop: 28,
+        width: 12,
+    },
+    dotGray: {
+        width: 11,
+        height: 11,
+        borderRadius: 6,
+        backgroundColor: '#C0C0C0',
+        borderWidth: 1.5,
+        borderColor: '#999',
+    },
+    connLine: {
+        width: 2,
+        height: 58,
+        backgroundColor: '#DEDEDE',
+        marginVertical: 3,
+    },
+    dotDark: {
+        width: 11,
+        height: 11,
+        borderRadius: 6,
+        backgroundColor: '#444',
+    },
+
+    // Fields
+    fieldLbl: { fontSize: 12, color: '#999', marginBottom: 5 },
+    fieldBox: {
+        borderWidth: 1,
+        borderColor: BORDER,
+        borderRadius: 7,
+        paddingHorizontal: 12,
+        paddingVertical: Platform.OS === 'ios' ? 11 : 4,
+        backgroundColor: WHITE,
+    },
+    fieldTxt: { fontSize: 14, fontWeight: '700', color: DARK },
+
+    // Divider + trip start
+    divider: { height: 1, backgroundColor: '#EBEBEB', marginVertical: 14 },
+    tripLbl: {
+        fontSize: 11,
+        color: MGRAY,
+        fontWeight: '600',
+        letterSpacing: 1.2,
+        textTransform: 'uppercase',
+    },
+    tripDate: {
+        fontSize: 18,
+        fontWeight: '800',
+        color: DARK,
+        marginTop: 5,
+        marginBottom: 18,
+    },
+
+    // CTA
+    ctaBtn: {
+        backgroundColor: ORANGE,
+        borderRadius: 10,
+        paddingVertical: 15,
+        alignItems: 'center',
+        shadowColor: ORANGE,
+        shadowOpacity: 0.4,
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 8,
+        elevation: 5,
+    },
+    ctaTxt: { color: WHITE, fontSize: 16, fontWeight: '700', letterSpacing: 0.4 },
+
+    // Scroll
+    scroll: { flex: 1, backgroundColor: BGRAY },
+    scrollContent: { paddingBottom: 10 },
+
+    // ── Bottom Nav ──
+    bottomNav: {
+        flexDirection: 'row',
+        backgroundColor: '#111111',
+        paddingTop: 8,
+        paddingBottom: Platform.OS === 'ios' ? 22 : 10,
+        alignItems: 'flex-end',
+    },
+    navItem: { flex: 1, alignItems: 'center', paddingTop: 4 },
+    navIco: { fontSize: 22, color: MGRAY },
+    navIcoOn: { color: ORANGE },
+    navLbl: { fontSize: 10.5, color: MGRAY, marginTop: 3, fontWeight: '500' },
+    navLblOn: { color: ORANGE },
+    navCenter: { flex: 1, alignItems: 'center', marginTop: -24 },
+    navCircle: {
+        width: 58,
+        height: 58,
+        borderRadius: 29,
+        backgroundColor: ORANGE,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 3,
+        borderColor: '#111111',
+        shadowColor: ORANGE,
+        shadowOpacity: 0.6,
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 10,
+        elevation: 10,
+    },
+    navCircleTxt: { fontSize: 26, fontWeight: '900', color: WHITE },
 });

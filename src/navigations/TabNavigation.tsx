@@ -1,8 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home } from '../screens/Home';
 import { TabConfig } from '../types/tabConfig';
 import CustomTabBar from '../components/bottomTabs/custom-tabBar';
+import HomeScreen from '../screens/Home';
+import { MyTrips } from '../screens/MyTrips';
+import { Driver } from '../screens/Driver';
+import { Profile } from '../screens/Profile';
+import { Offers } from '../screens/offers';
 
 // Placeholder screens
 const EmptyScreen = () => null;
@@ -57,10 +61,10 @@ export const TabNavigation = () => (
         screenOptions={{ headerShown: false }}
         tabBar={props => <CustomTabBar {...props} tabs={mainTabs} />}
     >
-        <Tab.Screen name="home" component={Home} />
-        <Tab.Screen name="myTrips" component={EmptyScreen} />
-        <Tab.Screen name="offers" component={EmptyScreen} />
-        <Tab.Screen name="driver" component={EmptyScreen} />
-        <Tab.Screen name="profile" component={EmptyScreen} />
+        <Tab.Screen name="home" component={HomeScreen} />
+        <Tab.Screen name="myTrips" component={MyTrips} />
+        <Tab.Screen name="offers" component={Offers} />
+        <Tab.Screen name="driver" component={Driver} />
+        <Tab.Screen name="profile" component={Profile} />
     </Tab.Navigator>
 );
